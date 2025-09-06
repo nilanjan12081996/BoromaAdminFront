@@ -142,7 +142,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <li>
                 <NavLink
-                  to="/merchant-management"
+                  to="/category-management"
                   className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('merchant-management') &&
                     'bg-graydark dark:bg-meta-4'
                     }`}
@@ -154,7 +154,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     :
                     <>
                       <BiUserPin className='text-xl' />
-                      Merchant Management
+                      Category Management
                     </>
                   }
                 </NavLink>

@@ -6,7 +6,7 @@ const formDataURL = ['product/add-product-images', '/user/update-profile', '/adm
 api.interceptors.request.use((req) => {
   let userTokenData;
   try {
-    userTokenData = JSON.parse(sessionStorage.getItem('chess_admin_token'));
+    userTokenData = JSON.parse(sessionStorage.getItem('boroma_admin_token'));
     // console.log("UserTokenData", userTokenData);
   } catch (error) {
     userTokenData = null;
@@ -30,7 +30,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && [401, 403].includes(error.response.status)) {
-      sessionStorage.removeItem('chess_admin_token');
+      sessionStorage.removeItem('boroma_admin_token');
     }
     return Promise.reject(error);
   }

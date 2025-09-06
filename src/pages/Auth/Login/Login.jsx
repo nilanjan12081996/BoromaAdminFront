@@ -108,18 +108,18 @@ const Login = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="mb-6">
                     <Label className="text-base text-[#263A43] font-medium pb-2 block">
-                      User name
+                      Email
                     </Label>
                     <input
                       type="text"
                       id="email"
                       className="bg-white border border-[#dfdfdf] text-[#888888] text-sm rounded-lg focus:ring-[#f1d9ff] focus:border-[#f1d9ff] block w-full py-3 px-3"
                       placeholder="Enter Your User Name"
-                      {...register("username", { required: true })}
+                      {...register("email", { required: true })}
                     />
-                    {errors.username && (
+                    {errors.email && (
                       <small className="text-red-500">
-                        User Name is required
+                        Email is Required
                       </small>
                     )}
                   </div>

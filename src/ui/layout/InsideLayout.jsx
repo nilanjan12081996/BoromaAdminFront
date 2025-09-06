@@ -8,36 +8,7 @@ import { useDispatch } from "react-redux";
 import { getSubdomain } from "../../Reducer/AuthSlice";
 const InsideLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // const location = useLocation();
-  // const isBaseUrl = (endPoint) => {
-  //   return location.pathname === endPoint;
-  // };
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { subdomain } = useSelector((state) => state?.auth);
-  useEffect(() => {
-    dispatch(getSubdomain());
-  }, [dispatch]);
-
-  // console.log("SubDomain: ", subdomain?.data?.[0]?.server_domain);
-  // localStorage.setItem("subDomainInside", subdomain?.data?.[0]?.server_domain);
-  const subDomain = localStorage.getItem("serverDomainInside");
-  console.log("subDomain: ", subDomain);
-
-  const baseURL = window.location.origin;
-  // const newBaseURL = baseURL.replace(/^https?:\/\//, "");
-  const localUrl = "http://localhost:5173";
-  // console.log("BaseURLInside: ", newBaseURL);
-
-  // if (baseURL !== subdomain?.data?.[0]?.server_domain && baseURL !== localUrl) {
-  //   navigate("/pageNotFound");
-  // }
-
-  // if (baseURL !== subDomain && baseURL !== localUrl) {
-  //   navigate("/pageNotFound");
-  // }
-
-  const token = sessionStorage.getItem("chess_admin_token");
+  const token = sessionStorage.getItem("boroma_admin_token");
   const parseToken = token ? JSON.parse(token)?.token : null;
   const nevigate = useNavigate();
   useEffect(() => {

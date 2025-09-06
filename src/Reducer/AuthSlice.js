@@ -63,7 +63,7 @@ export const login = createAsyncThunk(
     async (userInput, { rejectWithValue }) => {
 
         try {
-            const response = await api.post('/admin-auth/login', userInput);
+            const response = await api.post('/api/login', userInput);
             if (response?.data?.status_code === 200) {
                 return response.data;
             } else {
@@ -176,7 +176,7 @@ const AuthSlice = createSlice(
                 state.currentUser = {};
                 state.message = null;
                 state.error = null
-                sessionStorage.removeItem('chess_admin_token')
+                sessionStorage.removeItem('boroma_admin_token')
                 localStorage.removeItem('user_role_id')
                 localStorage.removeItem('user_short_name')
                 localStorage.clear()
@@ -239,8 +239,8 @@ const AuthSlice = createSlice(
                     state.loadingLogin = false;
 
                     sessionStorage.setItem(
-                        'chess_admin_token',
-                        JSON.stringify({ token: payload?.token })
+                        'boroma_admin_token',
+                        JSON.stringify({ token: payload?.access_token })
                     )
                     localStorage.setItem('user_role_id', payload?.role_id)
                     localStorage.setItem("user_short_name", payload?.role_short_name)

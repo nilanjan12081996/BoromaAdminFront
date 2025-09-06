@@ -37,6 +37,7 @@ import AddBatch from '../pages/ManageBatch/AddBatch.jsx';
 import ViewBatchDetails from '../pages/ManageBatch/BatchDetails.jsx'
 import MerchantManagement from '../pages/MerchantManagement/MerchantManagement.jsx';
 import CustomerManagement from '../pages/CustomerManagement/CustomerManagement.jsx';
+import ManageCategory from '../pages/CategoryManagement/ManageCategory.jsx';
 
 const allRoutes = [
   {
@@ -82,12 +83,12 @@ const allRoutes = [
     ],
   },
   {
-    path: '/merchant-management',
+    path: '/category-management',
     element: <InsideLayout />,
     children: [
       {
         index: true,
-        element: <MerchantManagement />,
+        element: <ManageCategory />,
       },
     ],
   },
