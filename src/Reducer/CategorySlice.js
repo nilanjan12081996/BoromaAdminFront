@@ -34,11 +34,61 @@ export const addCategory = createAsyncThunk(
         }
     }
 )
+export const changeStatus = createAsyncThunk(
+    'changeStatus',
+    async (user_input, { rejectWithValue }) => {
+        try {
+            const response = await api.post(`/api/admin/change-category-status`,user_input);
+            if (response?.data?.status_code === 200) {
+                return response?.data;
+            } else {
+                return rejectWithValue(response);
+            }
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+export const editCategory = createAsyncThunk(
+    'editCategory',
+    async (user_input, { rejectWithValue }) => {
+        try {
+            const response = await api.post(`/api/admin/edit-category`,user_input);
+            if (response?.data?.status_code === 200) {
+                return response?.data;
+            } else {
+                return rejectWithValue(response);
+            }
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+export const updateCategory = createAsyncThunk(
+    'updateCategory',
+    async (user_input, { rejectWithValue }) => {
+        try {
+            const response = await api.post(`/api/admin/update-category`,user_input);
+            if (response?.data?.status_code === 200) {
+                return response?.data;
+            } else {
+                return rejectWithValue(response);
+            }
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
 const initialState={
     loading:false,
     error:false,
     categoryList:[],
-    categoryData:""
+    categoryData:"",
+    categorySingle:{},
+    updateCateData:{}
+    
 }
 const CategorySlice=createSlice(
     {
@@ -68,6 +118,30 @@ const CategorySlice=createSlice(
                 state.error=false
             })
             .addCase(addCategory.rejected,(state,{payload})=>{
+                state.loading=false
+                state.error=payload
+            })
+            .addCase(editCategory.pending,(state)=>{
+                state.loading=true;
+            })
+            .addCase(editCategory.fulfilled,(state,{payload})=>{
+                state.loading=false
+                state.categorySingle=payload
+                state.error=false
+            })
+            .addCase(editCategory.rejected,(state,{payload})=>{
+                state.loading=false
+                state.error=payload
+            })
+            .addCase(updateCategory.pending,(state)=>{
+                state.loading=true;
+            })
+            .addCase(updateCategory.fulfilled,(state,{payload})=>{
+                state.loading=false
+                state.updateCateData=payload
+                state.error=false
+            })
+            .addCase(updateCategory.rejected,(state,{payload})=>{
                 state.loading=false
                 state.error=payload
             })
