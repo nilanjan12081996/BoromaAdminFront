@@ -4,13 +4,15 @@ import { editCategory, getCategory, updateCategory } from "../../Reducer/Categor
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Button, Label, Modal, TextInput } from "flowbite-react"
+import { editSubCategory, getSubCategory, updateSubCategory } from "../../Reducer/SubcategorySlice"
 
-const UpdateCategory=({
-    openMerchantDetailsModal,
-        setOpenMerchantDetailsModal,
-        categoryId
+const UpdateSubCategory=({
+    openSubDetailsModal,
+        setOpenSubDetailsModal,
+        subcategoryId
 })=>{
-    const{categorySingle}=useSelector((state)=>state?.category)
+   
+    const{subCategorySingle}=useSelector((state)=>state?.subCategory)
     const dispatch=useDispatch()
 
     const {
@@ -21,33 +23,33 @@ const UpdateCategory=({
       } = useForm();
 
     useEffect(()=>{
-        dispatch(editCategory({category_id:categoryId}))
-    },[categoryId])
+        dispatch(editSubCategory({sub_category_id:subcategoryId}))
+    },[subcategoryId])
 
     useEffect(()=>{
-setValue("category_name",categorySingle?.res?.category_name)
-    },[categorySingle,categoryId])
+setValue("sub_category_name",subCategorySingle?.res?.subcat_name)
+    },[subCategorySingle,subcategoryId])
 
     const onSubmit=(data)=>{
-        dispatch(updateCategory({...data,category_id:categoryId})).then((res)=>{
+        dispatch(updateSubCategory({...data,sub_category_id:subcategoryId})).then((res)=>{
             if(res?.payload?.status_code===200){
-        setOpenMerchantDetailsModal(false)
-                dispatch(getCategory())
+        setOpenSubDetailsModal(false)
+                dispatch(getSubCategory())
             }
         })
     }
     return(
         <>
                             <Modal
-                           show={openMerchantDetailsModal}
-                           onClose={() => setOpenMerchantDetailsModal(false)}
+                           show={openSubDetailsModal}
+                           onClose={() => setOpenSubDetailsModal(false)}
                          >
                             <form 
                             
                              onSubmit={handleSubmit(onSubmit)}
                             >
                            <Modal.Header className="text-[#435971]">
-                             Update Category
+                             Update Sub Category
                            </Modal.Header>
                            <Modal.Body>
                              <div className="space-y-4 h-[100px] ">
@@ -57,11 +59,11 @@ setValue("category_name",categorySingle?.res?.category_name)
                                  </div>
                                  <TextInput
                                    type="text"
-                                   placeholder="Enter Category Name"
-                                   {...register("category_name",{required:"Category Name Required"})}
+                                   placeholder="Enter Sub Category Name"
+                                   {...register("sub_category_name",{required:"Sub Category Name Required"})}
                                  />
-                                      {errors.category_name && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.category_name.message}</p>
+                                      {errors.sub_category_name && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.sub_category_name.message}</p>
                                     )}
                                </div>
                              </div>
@@ -69,7 +71,7 @@ setValue("category_name",categorySingle?.res?.category_name)
                            <Modal.Footer className="flex justify-end">
                              <Button
                                className="bg-white text-gray-700 hover:bg-[#9b1c1c] hover:text-white border border-gray-300"
-                               onClick={() => setOpenMerchantDetailsModal(false)}
+                               onClick={() => setOpenSubDetailsModal(false)}
                              >
                                Cancel
                              </Button>
@@ -82,4 +84,4 @@ setValue("category_name",categorySingle?.res?.category_name)
         </>
     )
 }
-export default UpdateCategory
+export default UpdateSubCategory

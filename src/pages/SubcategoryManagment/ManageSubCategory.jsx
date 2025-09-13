@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import { getSubCategory } from "../../Reducer/SubcategorySlice";
 import StatusToggleRendererSub from "./StatusToggleRendererSub";
 import AddSubCategory from "./AddSubCategory";
+import UpdateSubCategory from "./UpdateSubCategory";
 
 
 
@@ -89,7 +90,7 @@ console.log("categoryList: ",subCategoryList);
       minWidth: 120,
       cellRenderer: (params) => (
         <Button
-          onClick={() => handleMerchantDetails(params?.data?.id)}
+          onClick={() => handleSubDetails(params?.data?.id)}
           className="border text-[#536EFF] border-[#536EFF] bg-white hover:bg-[#536EFF] hover:text-white text-xl px-4 py-0 my-1"
         >
           View Details
@@ -103,9 +104,9 @@ console.log("categoryList: ",subCategoryList);
        setOpenAddSubModal(true);
      };
    
-     const handleMerchantDetails = (id) => {
-       setOpenMerchantDetailsModal(true);
-       setCategoryId(id)
+     const handleSubDetails = (id) => {
+       setOpenSubDetailsModal(true);
+       setsubCategoryId(id)
      };
    
      const handleManageMerchantDetails = () => {
@@ -149,13 +150,13 @@ console.log("categoryList: ",subCategoryList);
         setOpenAddSubModal={setOpenAddSubModal}
         />
       }  
-      {/* {
-        openMerchantDetailsModal&&<UpdateCategory
-        openMerchantDetailsModal={openMerchantDetailsModal}
-        setOpenMerchantDetailsModal={setOpenMerchantDetailsModal}
-        categoryId={categoryId}
+      {
+        openSubDetailsModal&&<UpdateSubCategory
+        openSubDetailsModal={openSubDetailsModal}
+        setOpenSubDetailsModal={setOpenSubDetailsModal}
+        subcategoryId={subcategoryId}
         />
-      } */}
+      }
        </div>
      );
 }
