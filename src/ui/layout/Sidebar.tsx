@@ -162,7 +162,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <li>
                 <NavLink
-                  to="/customer-management"
+                  to="/sub-category-management"
                   className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('customer-management') &&
                     'bg-graydark dark:bg-meta-4'
                     }`}
@@ -174,7 +174,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     :
                     <>
                       <BiUserCircle className='text-xl' />
-                      Customer Management
+                      Sub Category Management
                     </>
                   }
                 </NavLink>

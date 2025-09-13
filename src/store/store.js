@@ -30,6 +30,7 @@ import PlanKeySlice from '../Reducer/PlanKeySlice';
 import PaymentMethodSlice from '../Reducer/PaymentMethodSlice';
 import CourseSlice from '../Reducer/CourseSlice';
 import CategorySlice from '../Reducer/CategorySlice'
+import SubcategorySlice from '../Reducer/SubcategorySlice'
 
 const store = configureStore({
   reducer: {
@@ -63,7 +64,8 @@ const store = configureStore({
     plankey: PlanKeySlice,
     paymentMethod: PaymentMethodSlice,
     courses: CourseSlice,
-    category:CategorySlice
+    category:CategorySlice,
+    subCategory:SubcategorySlice
   },
   devTools: import.meta.env.DEV,
 });

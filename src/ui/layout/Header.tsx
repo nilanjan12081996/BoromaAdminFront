@@ -37,7 +37,7 @@ function Header(props: {
                 <Link className="block flex-shrink-0" to="/">
                     {/* <img src={logoIcon} alt="Logo" /> */}
                     <p className='text-black text-[30px] font-medium'>Dashboard</p>
-                    <span className='text-base text-[#323232]'>Welcome to <span className='text-[#536EFF] font-semibold'>EARNO</span> Dashboard</span>
+                    <span className='text-base text-[#323232]'>Welcome to <span className='text-[#C9B25D] font-semibold'>BAROMA</span> Dashboard</span>
                 </Link>
             </div>
 
@@ -71,7 +71,7 @@ function Header(props: {
                     <Link className="block flex-shrink-0" to="/">
                         {/* <img src={logoIcon} alt="Logo" /> */}
                         <p className='text-black text-[30px] font-medium'>Dashboard</p>
-                        <span className='text-base text-[#323232]'>Welcome to <span className='text-[#536EFF] font-semibold'>EARNO</span> Dashboard</span>
+                        <span className='text-base text-[#323232]'>Welcome to <span className='text-[#C9B25D] font-semibold'>BAROMA</span> Dashboard</span>
                     </Link>
                 </div>
             </div>
