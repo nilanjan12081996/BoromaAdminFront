@@ -61,7 +61,7 @@ dispatch(addSubCategory(data)).then((res)=>{
                      </Button>
                    </Modal.Footer>
                    </form>
-                 </Modal>
+          </Modal>
         </>
     )
 }

@@ -27,6 +27,7 @@ import { getSubCategory } from "../../Reducer/SubcategorySlice";
 
 import { getVehiclesInfo } from "../../Reducer/VehicleSlice";
 import StatusToggleRenderVehicle from "./StatusToggleRenderVehicle";
+import AddVehicle from "./AddVehicle";
 const VehicleManagement=()=>{
     const{vehicleList}=useSelector((state)=>state?.vehicles)
     const[vehicleId,setVehicleId]=useState()
@@ -116,7 +117,7 @@ console.log("vehicleList: ",vehicleList);
 
    
      const handleAddSub = () => {
-       setOpenAddSubModal(true);
+       setOpenAddVehicleModal(true);
      };
    
      const handleSubDetails = (id) => {
@@ -135,13 +136,13 @@ console.log("vehicleList: ",vehicleList);
          <div className="wrapper_area my-0 mx-auto p-6 rounded-xl bg-white">
            <div className="h-full lg:h-screen">
              <div className="flex justify-between items-center mb-4">
-               <h2 className="text-2xl font-semibold">Sub Category List</h2>
+               <h2 className="text-2xl font-semibold">Vehicle Info</h2>
                <Button
                  onClick={() => handleAddSub()}
                  className="bg-[#536EFF] hover:bg-[#E7E7FF] px-4 py-1 text-white hover:text-[#536EFF] text-base font-semibold flex justify-center items-center rounded-md"
                >
                  <CgAdd className="text-[18px] mr-1" />
-                 Add Sub Category
+                 Add Vehicle Info
                </Button>
              </div>
              <div
@@ -159,19 +160,19 @@ console.log("vehicleList: ",vehicleList);
            </div>
          </div>
          {/* Register New Merchant modal start here */}
-      {/* {
-        openAddSubModal&&<AddSubCategory
-        openAddSubModal={openAddSubModal}
-        setOpenAddSubModal={setOpenAddSubModal}
+       {
+        openAddVehicleModal&&<AddVehicle
+        openAddVehicleModal={openAddVehicleModal}
+        setOpenAddVehicleModal={setOpenAddVehicleModal}
         />
       }  
-      {
+      {/* {
         openSubDetailsModal&&<UpdateSubCategory
         openSubDetailsModal={openSubDetailsModal}
         setOpenSubDetailsModal={setOpenSubDetailsModal}
         subcategoryId={subcategoryId}
         />
-      } */}
+      }  */}
        </div>
      );
 }

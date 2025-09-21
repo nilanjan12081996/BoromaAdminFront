@@ -21,11 +21,11 @@ export const getVehiclesInfo = createAsyncThunk(
     }
 )
 
-export const addSubCategory = createAsyncThunk(
-    'addSubCategory',
+export const addVehicle = createAsyncThunk(
+    'addVehicle',
     async (user_input, { rejectWithValue }) => {
         try {
-            const response = await api.post(`/api/admin/add-sub-category`,user_input);
+            const response = await api.post(`/api/admin/add-vehicle-info`,user_input);
             if (response?.data?.status_code === 201) {
                 return response?.data;
             } else {
@@ -41,6 +41,22 @@ export const changeStatusVehicle = createAsyncThunk(
     async (user_input, { rejectWithValue }) => {
         try {
             const response = await api.post(`/api/admin/change-vehicle-info-status`,user_input);
+            if (response?.data?.status_code === 200) {
+                return response?.data;
+            } else {
+                return rejectWithValue(response);
+            }
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+export const getCategoryVeh = createAsyncThunk(
+    'getCategoryVeh',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/api/admin/get-categories`);
             if (response?.data?.status_code === 200) {
                 return response?.data;
             } else {
@@ -87,9 +103,10 @@ const initialState={
     loading:false,
     error:false,
     vehicleList:[],
-    subCategoryData:"",
+    addVehicleData:"",
     subCategorySingle:{},
-    updateSubCateData:{}
+    updateSubCateData:{},
+    categ:[]
     
 }
 const VehicleSlice=createSlice(
@@ -113,15 +130,15 @@ const VehicleSlice=createSlice(
                 state.loading=false
                 state.error=payload
             })
-            .addCase(addSubCategory.pending,(state)=>{
+            .addCase(addVehicle.pending,(state)=>{
                 state.loading=true;
             })
-            .addCase(addSubCategory.fulfilled,(state,{payload})=>{
+            .addCase(addVehicle.fulfilled,(state,{payload})=>{
                 state.loading=false
-                state.subCategoryData=payload
+                state.addVehicleData=payload
                 state.error=false
             })
-            .addCase(addSubCategory.rejected,(state,{payload})=>{
+            .addCase(addVehicle.rejected,(state,{payload})=>{
                 state.loading=false
                 state.error=payload
             })
@@ -146,6 +163,18 @@ const VehicleSlice=createSlice(
                 state.error=false
             })
             .addCase(updateSubCategory.rejected,(state,{payload})=>{
+                state.loading=false
+                state.error=payload
+            })
+              .addCase(getCategoryVeh.pending,(state)=>{
+                state.loading=true;
+            })
+            .addCase(getCategoryVeh.fulfilled,(state,{payload})=>{
+                state.loading=false
+                state.categ=payload
+                state.error=false
+            })
+            .addCase(getCategoryVeh.rejected,(state,{payload})=>{
                 state.loading=false
                 state.error=payload
             })
