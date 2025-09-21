@@ -39,6 +39,7 @@ import MerchantManagement from '../pages/MerchantManagement/MerchantManagement.j
 import CustomerManagement from '../pages/CustomerManagement/CustomerManagement.jsx';
 import ManageCategory from '../pages/CategoryManagement/ManageCategory.jsx';
 import ManageSubCategory from '../pages/SubcategoryManagment/ManageSubCategory.jsx';
+import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx';
 
 const allRoutes = [
   {
@@ -100,6 +101,16 @@ const allRoutes = [
       {
         index: true,
         element: <ManageSubCategory />,
+      },
+    ],
+  },
+  {
+    path: '/vehicle-management',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <VehicleManagement/>,
       },
     ],
   },

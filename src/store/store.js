@@ -31,6 +31,7 @@ import PaymentMethodSlice from '../Reducer/PaymentMethodSlice';
 import CourseSlice from '../Reducer/CourseSlice';
 import CategorySlice from '../Reducer/CategorySlice'
 import SubcategorySlice from '../Reducer/SubcategorySlice'
+import VehicleSlice from '../Reducer/VehicleSlice'
 
 const store = configureStore({
   reducer: {
@@ -65,7 +66,8 @@ const store = configureStore({
     paymentMethod: PaymentMethodSlice,
     courses: CourseSlice,
     category:CategorySlice,
-    subCategory:SubcategorySlice
+    subCategory:SubcategorySlice,
+    vehicles:VehicleSlice,
   },
   devTools: import.meta.env.DEV,
 });
