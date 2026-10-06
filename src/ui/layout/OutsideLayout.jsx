@@ -9,11 +9,11 @@ const OutsideLayout = () => {
   const token = sessionStorage.getItem("boroma_admin_token");
   const parseToken = token ? JSON.parse(token)?.token : null;
   const nevigate = useNavigate();
-  useEffect(() => {
-    if (parseToken !== null || parseToken !== null) {
-      nevigate("/dashboard");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (parseToken !== null || parseToken !== null) {
+  //     nevigate("/dashboard");
+  //   }
+  // }, []);
 
   return (
     <>

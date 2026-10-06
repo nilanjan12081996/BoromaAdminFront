@@ -51,31 +51,35 @@ const Login = () => {
   }, [setValue]);
 
   const onSubmit = (data) => {
-    dispatch(login(data)).then((res) => {
-      console.log("Res: ", res);
-      if (res?.payload?.status_code === 200) {
-        if (res?.payload?.sub_domain === false) {
-          setOpenModal(true);
-        } else {
-          if (data?.rememberMe) {
-            Cookies.set("username", data?.username, { expires: 7 });
-            Cookies.set("password", data?.password, { expires: 7 });
-          } else {
-            Cookies.remove("username");
-            Cookies.remove("password");
-          }
-          navigate("/dashboard");
-        }
-      } else if (res?.payload?.status_code === 400) {
-        setErrorMessage(res?.payload?.message);
-      } else if (res?.payload?.status === 422) {
-        setErrorMessage(
-          res?.payload?.response?.data?.data?.[0]?.message
-            ? res?.payload?.response?.data?.data?.[0]?.message
-            : res?.payload?.response?.data?.message
-        );
-      }
-    });
+    // dispatch(login(data)).then((res) => {
+    //   console.log("Res: ", res);
+    //   if (res?.payload?.status_code === 200) {
+    //     if (res?.payload?.sub_domain === false) {
+    //       setOpenModal(true);
+    //     } else {
+    //       if (data?.rememberMe) {
+    //         Cookies.set("username", data?.username, { expires: 7 });
+    //         Cookies.set("password", data?.password, { expires: 7 });
+    //       } else {
+    //         Cookies.remove("username");
+    //         Cookies.remove("password");
+    //       }
+    //       navigate("/dashboard");
+    //     }
+    //   } else if (res?.payload?.status_code === 400) {
+    //     setErrorMessage(res?.payload?.message);
+    //   } else if (res?.payload?.status === 422) {
+    //     setErrorMessage(
+    //       res?.payload?.response?.data?.data?.[0]?.message
+    //         ? res?.payload?.response?.data?.data?.[0]?.message
+    //         : res?.payload?.response?.data?.message
+    //     );
+    //   }
+    // });
+  
+  navigate("/dashboard");
+  
+  
   };
   return (
     <div className="my-0 lg:my-0 mx-4 lg:mx-0 flex justify-center items-center wrapper_bg_area">
@@ -115,7 +119,7 @@ const Login = () => {
                       id="email"
                       className="bg-white border border-[#dfdfdf] text-[#888888] text-sm rounded-lg focus:ring-[#f1d9ff] focus:border-[#f1d9ff] block w-full py-3 px-3"
                       placeholder="Enter Your User Name"
-                      {...register("email", { required: true })}
+                      {...register("email", { required: false })}
                     />
                     {errors.email && (
                       <small className="text-red-500">
@@ -142,7 +146,7 @@ const Login = () => {
                       type="password"
                       id="password"
                       className="bg-white border border-[#dfdfdf] text-[#888888] text-sm rounded-lg focus:ring-[#f1d9ff] focus:border-[#f1d9ff] block w-full py-3 px-3"
-                      {...register("password", { required: true })}
+                      {...register("password", { required: false })}
                     />
                     {errors.password && (
                       <small className="text-red-500">
