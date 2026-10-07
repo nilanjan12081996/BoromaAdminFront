@@ -29,7 +29,7 @@ function Header(props: {
                     e.stopPropagation();
                     props.setSidebarOpen(!props.sidebarOpen);
                     }}
-                    className="z-99999 block rounded-full bg-[#536EFF] p-1 absolute top-[28px] left-[-60px]"
+                    className="z-99999 block rounded-full bg-[#bf0300] p-1 absolute top-[28px] left-[-60px]"
                 >
                     <IoMdArrowForward className='text-xl text-white hover:text-black' />
                 </button>
@@ -37,7 +37,7 @@ function Header(props: {
                 <Link className="block flex-shrink-0" to="/">
                     {/* <img src={logoIcon} alt="Logo" /> */}
                     <p className='text-black text-[30px] font-medium'>Dashboard</p>
-                    <span className='text-base text-[#323232]'>Welcome to <span className='text-[#C9B25D] font-semibold'>BAROMA</span> Dashboard</span>
+                    <span className='text-base text-[#323232]'>Welcome to <span className='text-[#bf0300] font-semibold'>BAROMA</span> Dashboard</span>
                 </Link>
             </div>
 
@@ -63,7 +63,7 @@ function Header(props: {
                         e.stopPropagation();
                         props.setSidebarOpen(!props.sidebarOpen);
                         }}
-                        className="z-99999 block rounded-full bg-[#536EFF] p-1 absolute top-[28px] left-[-60px]"
+                        className="z-99999 block rounded-full bg-[#bf0300] p-1 absolute top-[28px] left-[-60px]"
                     >
                         <IoMdArrowBack className='text-xl text-white hover:text-black' />
                     </button>
@@ -71,7 +71,7 @@ function Header(props: {
                     <Link className="block flex-shrink-0" to="/">
                         {/* <img src={logoIcon} alt="Logo" /> */}
                         <p className='text-black text-[30px] font-medium'>Dashboard</p>
-                        <span className='text-base text-[#323232]'>Welcome to <span className='text-[#C9B25D] font-semibold'>BAROMA</span> Dashboard</span>
+                        <span className='text-base text-[#323232]'>Welcome to <span className='text-[#bf0300] font-semibold'>BAROMA</span> Dashboard</span>
                     </Link>
                 </div>
             </div>

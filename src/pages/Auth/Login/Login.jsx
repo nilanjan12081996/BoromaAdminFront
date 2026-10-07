@@ -76,10 +76,8 @@ const Login = () => {
     //     );
     //   }
     // });
-  
-  navigate("/dashboard");
-  
-  
+
+    navigate("/dashboard");
   };
   return (
     <div className="my-0 lg:my-0 mx-4 lg:mx-0 flex justify-center items-center wrapper_bg_area">
@@ -96,7 +94,7 @@ const Login = () => {
               </div>
               <h1 className="text-left font-semibold text-[34px] leading-[45px] text-[#0B2C3F] pb-4">
                 Login to{" "}
-                <span className="text-[#C9B25D]">BAROMA TRANSPORT</span>
+                <span className="text-[#b90300]">BAROMA TRANSPORT</span>
               </h1>
               {/* <p className="text-[15px] text-[#8E8E8E]">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -122,9 +120,7 @@ const Login = () => {
                       {...register("email", { required: false })}
                     />
                     {errors.email && (
-                      <small className="text-red-500">
-                        Email is Required
-                      </small>
+                      <small className="text-red-500">Email is Required</small>
                     )}
                   </div>
                   <div className="mb-1">
@@ -179,7 +175,7 @@ const Login = () => {
 
                   <button
                     type="submit"
-                    className="text-[#0B2C3F] hover:text-white bg-[#C9B25D] font-medium mb-2 hover:bg-[#0B2C3F] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md text-[20px] w-full px-5 py-3.5 text-center"
+                    className="text-white hover:text-white bg-[#b90300] font-medium mb-2 hover:bg-[#0B2C3F] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md text-[20px] w-full px-5 py-3.5 text-center"
                   >
                     {loadingLogin ? "Wait..." : "Log In"}
                   </button>
