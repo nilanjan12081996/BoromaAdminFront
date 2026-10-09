@@ -42,6 +42,7 @@ import ManageSubCategory from '../pages/SubcategoryManagment/ManageSubCategory.j
 import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx';
 
 import Finance from '../pages/Finance/Finance.jsx';
+import Booking from '../pages/Booking/Booking.jsx';
 
 const allRoutes = [
   {
@@ -97,6 +98,19 @@ const allRoutes = [
       },
     ],
   },
+
+  {
+    path: '/booking',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Booking />,
+      },
+    ],
+  },
+
+  
 
   {
     path: '/category-management',
