@@ -140,7 +140,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* Child menu for Coach Sessions */}
 
 
-              <li>
+              {/* <li>
                 <NavLink
                   to="/category-management"
                   className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('merchant-management') &&
@@ -198,7 +198,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     </>
                   }
                 </NavLink>
-              </li>
+              </li> */}
 
               {/* <li>
                 <NavLink
@@ -259,6 +259,107 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }
                 </NavLink>
               </li> */}
+
+
+              <li>
+                <NavLink
+                  to="/finance"
+                  className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('finance') &&
+                    'bg-graydark dark:bg-meta-4'
+                    }`}
+                >
+                  {sidebarOpen ?
+                    <>
+                      <BiUserPin className='text-xl' />
+                    </>
+                    :
+                    <>
+                      <BiUserPin className='text-xl' />
+                      Finance
+                    </>
+                  }
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/booking"
+                  className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('booking') &&
+                    'bg-graydark dark:bg-meta-4'
+                    }`}
+                >
+                  {sidebarOpen ?
+                    <>
+                      <BiUserCircle className='text-xl' />
+                    </>
+                    :
+                    <>
+                      <BiUserCircle className='text-xl' />
+                      Booking
+                    </>
+                  }
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/maintainance"
+                  className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('maintainance') &&
+                    'bg-graydark dark:bg-meta-4'
+                    }`}
+                >
+                  {sidebarOpen ?
+                    <>
+                      <BiUserCircle className='text-xl' />
+                    </>
+                    :
+                    <>
+                      <BiUserCircle className='text-xl' />
+                      Maintainance
+                    </>
+                  }
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/transport"
+                  className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('transport') &&
+                    'bg-graydark dark:bg-meta-4'
+                    }`}
+                >
+                  {sidebarOpen ?
+                    <>
+                      <BiUserCircle className='text-xl' />
+                    </>
+                    :
+                    <>
+                      <BiUserCircle className='text-xl' />
+                      Transport
+                    </>
+                  }
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/diver"
+                  className={`group relative flex items-center gap-2 rounded-sm px-4 py-2 ${sidebarOpen ? 'justify-center' : 'justify-start'} font-normal text-sm text-gray-600 duration-300 ease-in-out hover:bg-graydark mb-2 ${pathname.includes('diver') &&
+                    'bg-graydark dark:bg-meta-4'
+                    }`}
+                >
+                  {sidebarOpen ?
+                    <>
+                      <BiUserCircle className='text-xl' />
+                    </>
+                    :
+                    <>
+                      <BiUserCircle className='text-xl' />
+                      Diver
+                    </>
+                  }
+                </NavLink>
+              </li>
 
 
             </ul>

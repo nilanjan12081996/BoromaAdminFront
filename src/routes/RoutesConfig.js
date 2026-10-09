@@ -41,6 +41,8 @@ import ManageCategory from '../pages/CategoryManagement/ManageCategory.jsx';
 import ManageSubCategory from '../pages/SubcategoryManagment/ManageSubCategory.jsx';
 import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx';
 
+import Finance from '../pages/Finance/Finance.jsx';
+
 const allRoutes = [
   {
     path: '/',
@@ -84,6 +86,18 @@ const allRoutes = [
       },
     ],
   },
+
+  {
+    path: '/finance',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Finance />,
+      },
+    ],
+  },
+
   {
     path: '/category-management',
     element: <InsideLayout />,
