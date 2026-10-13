@@ -107,37 +107,64 @@ input {
   box-shadow: none;
 }
 
-.sidebar_menu ul li a {
-  margin-left: 20px;
-  margin-right: 20px;
+.sidebar_menu {
+  overflow-x: hidden !important;
+}
+
+.sidebar_menu ul li a,
+.sidebar_menu ul li button {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  margin-left: 16px;
+  margin-right: 16px;
   font-size: 15px;
   line-height: 30px;
   font-weight: 500;
   color: #646363;
-  /* padding-left: 20px; */
 }
-.sidebar_menu ul li a:hover {
-  color: #646363;
+.sidebar_menu ul li a:hover,
+.sidebar_menu ul li button:hover {
+  color: #111827;
   background: #f5f5f5;
   border-radius: 12px;
 }
 
 .sidebar_menu ul ul {
-  margin-left: 20px;
-  margin-right: 20px;
-  border-radius: 5px;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-left: 0;
+  width: calc(100% - 32px);
+  box-sizing: border-box;
+  border-radius: 8px;
 }
 .sidebar_menu ul ul li a {
-  font-size: 15px;
-  line-height: 40px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   margin-left: 0;
   margin-right: 0;
-  color: #23b9fb;
+  padding-left: 28px !important;
+  padding-right: 12px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 36px;
+  font-weight: 500;
+  color: #646363;
+  border-radius: 10px;
 }
 .sidebar_menu ul ul li a:hover {
-  color: #ab54db;
-  background: #efe0f7;
+  color: #111827;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+.sidebar_menu ul ul li a.active {
+  color: #111827;
+  font-weight: 600;
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
 .sidebar_menu ul li a.active {

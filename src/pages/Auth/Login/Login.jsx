@@ -27,7 +27,7 @@ const Login = () => {
   //   navigate("/dashboard");
   // };
   const dispatch = useDispatch();
-  const [errorMessage, setErrorMessage] = useState(" ");
+  const [errorMessage, setErrorMessage] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
   const { loadingLogin } = useSelector((state) => state?.auth);
@@ -41,44 +41,77 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    const savedUsername = Cookies.get("username");
+    const savedEmail = Cookies.get("user_email") || Cookies.get("username");
     const savedPassword = Cookies.get("password");
 
-    if (savedUsername && savedPassword) {
-      setValue("username", savedUsername);
+    if (savedEmail) {
+      setValue("email", savedEmail);
+      setValue("rememberMe", true);
+    }
+    if (savedPassword) {
       setValue("password", savedPassword);
     }
   }, [setValue]);
 
-  const onSubmit = (data) => {
-    // dispatch(login(data)).then((res) => {
-    //   console.log("Res: ", res);
-    //   if (res?.payload?.status_code === 200) {
-    //     if (res?.payload?.sub_domain === false) {
-    //       setOpenModal(true);
-    //     } else {
-    //       if (data?.rememberMe) {
-    //         Cookies.set("username", data?.username, { expires: 7 });
-    //         Cookies.set("password", data?.password, { expires: 7 });
-    //       } else {
-    //         Cookies.remove("username");
-    //         Cookies.remove("password");
-    //       }
-    //       navigate("/dashboard");
-    //     }
-    //   } else if (res?.payload?.status_code === 400) {
-    //     setErrorMessage(res?.payload?.message);
-    //   } else if (res?.payload?.status === 422) {
-    //     setErrorMessage(
-    //       res?.payload?.response?.data?.data?.[0]?.message
-    //         ? res?.payload?.response?.data?.data?.[0]?.message
-    //         : res?.payload?.response?.data?.message
-    //     );
-    //   }
-    // });
+  const onSubmit = async (data) => {
+    console.log("Submitting login form with data:", data);
+    setErrorMessage("");
+    const actionResult = await dispatch(
+      login({
+        email: data.email?.trim(),
+        password: data.password,
+      })
+    );
 
-    navigate("/dashboard");
+    console.log("Login actionResult:", actionResult);
+
+    if (login.fulfilled.match(actionResult)) {
+      const payload = actionResult.payload;
+      if (data?.rememberMe) {
+        Cookies.set("user_email", data.email?.trim(), { expires: 7 });
+        Cookies.set("username", data.email?.trim(), { expires: 7 });
+        if (data.password) {
+          Cookies.set("password", data.password, { expires: 7 });
+        }
+      } else {
+        Cookies.remove("user_email");
+        Cookies.remove("username");
+        Cookies.remove("password");
+      }
+
+      toast.success(payload?.message || "Login successful!");
+      navigate("/dashboard");
+    } else {
+      const payload = actionResult.payload;
+      console.log("Login error payload:", payload);
+      let msg = "Invalid credentials. Please try again.";
+
+      if (typeof payload === "string") {
+        msg = payload;
+      } else if (payload?.message && typeof payload.message === "string") {
+        msg = payload.message;
+      } else if (payload?.error) {
+        if (typeof payload.error === "string") {
+          msg = payload.error;
+        } else if (typeof payload.error === "object") {
+          msg = Object.values(payload.error).join(", ");
+        }
+      }
+
+      setErrorMessage(msg);
+      toast.error(msg);
+    }
   };
+
+  const onInvalid = (validationErrors) => {
+    console.warn("Form validation failed:", validationErrors);
+    if (validationErrors?.email) {
+      setErrorMessage("Email is required.");
+    } else if (validationErrors?.password) {
+      setErrorMessage("Password is required.");
+    }
+  };
+
   return (
     <div className="my-0 lg:my-0 mx-4 lg:mx-0 flex justify-center items-center wrapper_bg_area">
       <div className="w-full my-0 mx-auto login_area">
@@ -107,7 +140,7 @@ const Login = () => {
                   </h6>
                 )}
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
                   <div className="mb-6">
                     <Label className="text-base text-[#263A43] font-medium pb-2 block">
                       Email
@@ -117,7 +150,7 @@ const Login = () => {
                       id="email"
                       className="bg-white border border-[#dfdfdf] text-[#888888] text-sm rounded-lg focus:ring-[#f1d9ff] focus:border-[#f1d9ff] block w-full py-3 px-3"
                       placeholder="Enter Your User Name"
-                      {...register("email", { required: false })}
+                      {...register("email", { required: true })}
                     />
                     {errors.email && (
                       <small className="text-red-500">Email is Required</small>
@@ -142,7 +175,7 @@ const Login = () => {
                       type="password"
                       id="password"
                       className="bg-white border border-[#dfdfdf] text-[#888888] text-sm rounded-lg focus:ring-[#f1d9ff] focus:border-[#f1d9ff] block w-full py-3 px-3"
-                      {...register("password", { required: false })}
+                      {...register("password", { required: true })}
                     />
                     {errors.password && (
                       <small className="text-red-500">
@@ -175,9 +208,12 @@ const Login = () => {
 
                   <button
                     type="submit"
-                    className="text-white hover:text-white bg-[#b90300] font-medium mb-2 hover:bg-[#0B2C3F] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md text-[20px] w-full px-5 py-3.5 text-center"
+                    disabled={loadingLogin}
+                    className={`text-white hover:text-white bg-[#b90300] font-medium mb-2 hover:bg-[#0B2C3F] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md text-[20px] w-full px-5 py-3.5 text-center transition duration-200 ${
+                      loadingLogin ? "opacity-70 cursor-not-allowed" : ""
+                    }`}
                   >
-                    {loadingLogin ? "Wait..." : "Log In"}
+                    {loadingLogin ? "Logging in..." : "Log In"}
                   </button>
                 </form>
                 {/* <div className="break_area relative">

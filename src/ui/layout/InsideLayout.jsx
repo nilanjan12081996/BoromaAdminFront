@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import { Suspense } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../layout/header";
 import Sidebar from "../layout/Sidebar";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getSubdomain } from "../../Reducer/AuthSlice";
+
 const InsideLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const token = sessionStorage.getItem("boroma_admin_token");
   const parseToken = token ? JSON.parse(token)?.token : null;
   const nevigate = useNavigate();
-  // useEffect(() => {
-  //   if (parseToken === null || parseToken === null) {
-  //     nevigate("/");
-  //   }
-  // }, []);
 
   return (
     <>

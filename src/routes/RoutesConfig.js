@@ -43,6 +43,8 @@ import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx'
 
 import Finance from '../pages/Finance/Finance.jsx';
 import Booking from '../pages/Booking/Booking.jsx';
+import AddSidebar from '../pages/SidebarManagement/AddSidebar.jsx';
+import AddSubSidebar from '../pages/SidebarManagement/AddSubSidebar.jsx';
 
 const allRoutes = [
   {
@@ -139,6 +141,46 @@ const allRoutes = [
       {
         index: true,
         element: <VehicleManagement/>,
+      },
+    ],
+  },
+  {
+    path: '/add-sidebar',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <AddSidebar />,
+      },
+    ],
+  },
+  {
+    path: '/sidebar/add',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <AddSidebar />,
+      },
+    ],
+  },
+  {
+    path: '/add-subsidebar',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <AddSubSidebar />,
+      },
+    ],
+  },
+  {
+    path: '/sidebar/add-subsidebar',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <AddSubSidebar />,
       },
     ],
   },

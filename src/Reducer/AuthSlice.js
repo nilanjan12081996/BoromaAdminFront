@@ -1,16 +1,80 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import errorHandler from "../store/ErrorHandler";
-import { Base64, decode, encode } from "js-base64";
+
 import api from "../store/Api";
 
+export const login = createAsyncThunk(
+    'auth/login',
+    async (userInput, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/superadmin/login', userInput);
+            if (response?.data?.statusCode === 200 || response?.data?.status_code === 200 || response?.data?.status === true) {
+                return response.data;
+            } else {
+                let errors = errorHandler(response);
+                return rejectWithValue(errors);
+            }
+        } catch (err) {
+            let errors = errorHandler(err);
+            return rejectWithValue(errors);
+        }
+    }
+);
 
+// export const loginAdmin = createAsyncThunk(
+//     'auth/loginAdmin',
+//     async (userInput, { rejectWithValue }) => {
+//         try {
+//             const response = await api.post('/superadmin/login', userInput);
+//             if (response?.data?.statusCode === 200 || response?.data?.status_code === 200 || response?.data?.status === true) {
+//                 return response.data;
+//             } else {
+//                 let errors = errorHandler(response);
+//                 return rejectWithValue(errors);
+//             }
+//         } catch (err) {
+//             let errors = errorHandler(err);
+//             return rejectWithValue(errors);
+//         }
+//     }
+// );
 
+export const forgotPassword = createAsyncThunk(
+    'auth/forgotPassword',
+    async (userInput, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/superadmin/forgot-password', userInput);
+            if (response?.data?.statusCode === 200 || response?.data?.status_code === 200 || response?.data?.status === true) {
+                return response.data;
+            } else {
+                let errors = errorHandler(response);
+                return rejectWithValue(errors);
+            }
+        } catch (err) {
+            let errors = errorHandler(err);
+            return rejectWithValue(errors);
+        }
+    }
+);
 
-
-//For Register
-
-
+export const resetPassword = createAsyncThunk(
+    'auth/resetPassword',
+    async (userInput, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/superadmin/reset-password', userInput);
+            if (response?.data?.statusCode === 200 || response?.data?.status_code === 200 || response?.data?.status === true) {
+                return response.data;
+            } else {
+                let errors = errorHandler(response);
+                return rejectWithValue(errors);
+            }
+        } catch (err) {
+            let errors = errorHandler(err);
+            return rejectWithValue(errors);
+        }
+    }
+);
 export const registerUser = createAsyncThunk(
     'user/register',
     async (userInput, { rejectWithValue }) => {
@@ -55,60 +119,6 @@ export const verifyOtp = createAsyncThunk(
 );
 
 
-// For Login
-
-
-export const login = createAsyncThunk(
-    'auth/login',
-    async (userInput, { rejectWithValue }) => {
-
-        try {
-            const response = await api.post('/api/login', userInput);
-            if (response?.data?.status_code === 200) {
-                return response.data;
-            } else {
-                return rejectWithValue(response.data);
-            }
-        } catch (err) {
-            // let errors = errorHandler(err);
-            return rejectWithValue(err);
-        }
-    }
-)
-
-export const forgotPassword = createAsyncThunk(
-    'auth/forgotPassword',
-    async (userInput, { rejectWithValue }) => {
-        try {
-            const response = await api.post('/forget-password', userInput);
-            if (response?.data?.status_code === 200) {
-                return response.data;
-            } else {
-                return rejectWithValue(response.data);
-            }
-        } catch (err) {
-            let errors = errorHandler(err);
-            return rejectWithValue(errors);
-        }
-    }
-)
-export const resetPassword = createAsyncThunk(
-    'auth/resetPawwrod',
-    async (userInput, { rejectWithValue }) => {
-        try {
-            const response = await api.post('forget-password/reset-password', userInput);
-            if (response?.data?.status_code === 200) {
-                return response.data;
-            } else {
-                return rejectWithValue(response.data);
-            }
-        } catch (err) {
-            let errors = errorHandler(err);
-            return rejectWithValue(errors);
-        }
-    }
-)
-
 export const createSubDomain = createAsyncThunk(
     'auth/createSubDomain',
     async (userInput, { rejectWithValue }) => {
@@ -143,7 +153,6 @@ export const getSubdomain = createAsyncThunk(
         }
     }
 )
-//init state
 
 const initialState = {
     message: null,
@@ -167,20 +176,22 @@ const AuthSlice = createSlice(
             clearCurrentUser: (state) => {
                 state.currentUser = {};
             },
-            resetAfterLoggedIn: (state) => {
-                state = { ...initialState, isLoggedIn: true };
+            resetAfterLoggedIn: () => {
+                return { ...initialState, isLoggedIn: true };
             },
 
             logout: (state) => {
                 state.isLoggedIn = false;
                 state.currentUser = {};
                 state.message = null;
-                state.error = null
-                sessionStorage.removeItem('boroma_admin_token')
-                localStorage.removeItem('user_role_id')
-                localStorage.removeItem('user_short_name')
-                localStorage.clear()
-
+                state.error = null;
+                sessionStorage.removeItem('boroma_admin_token');
+                localStorage.removeItem('user_role_id');
+                localStorage.removeItem('user_short_name');
+                localStorage.removeItem('user_role');
+                localStorage.removeItem('user_name');
+                localStorage.clear();
+                sessionStorage.clear();
             }
         },
         extraReducers: (builder) => {
@@ -231,30 +242,43 @@ const AuthSlice = createSlice(
                     state.error = false;
                 })
                 .addCase(login.fulfilled, (state, { payload }) => {
-
                     console.log("Payload", payload);
                     state.isLoggedIn = true;
-
                     state.message = payload?.message;
                     state.loadingLogin = false;
+                    state.error = false;
+
+                    const token = payload?.data?.token || payload?.token || payload?.access_token || payload?.data?.access_token;
+                    const role = payload?.data?.role || payload?.role || payload?.role_short_name;
+                    const user = payload?.data?.superAdminDto || payload?.user || {};
+
+                    state.currentUser = user;
 
                     sessionStorage.setItem(
                         'boroma_admin_token',
-                        JSON.stringify({ token: payload?.access_token })
-                    )
-                    localStorage.setItem('user_role_id', payload?.role_id)
-                    localStorage.setItem("user_short_name", payload?.role_short_name)
+                        JSON.stringify({ token: token })
+                    );
 
+                    if (role) {
+                        sessionStorage.setItem("role", role);
+                        localStorage.setItem("user_short_name", role);
+                        localStorage.setItem("user_role", role);
+                    }
+                    if (user?.id || payload?.role_id) {
+                        localStorage.setItem("user_role_id", payload?.role_id || user?.id);
+                    }
+                    if (user?.fullName || user?.email) {
+                        localStorage.setItem("user_name", user.fullName || user.email);
+                    }
                 })
 
                 .addCase(login.rejected, (state, response) => {
-                    // console.log("Payload: ", payload);
                     state.error = true;
                     state.loadingLogin = false;
+                    const payload = response?.payload;
                     state.message =
-                        response !== undefined && response
-                            ? response
-                            : 'Something went wrong. Try again later.';
+                        payload?.message ||
+                        (typeof payload === 'string' ? payload : 'Something went wrong. Try again later.');
                 })
                 .addCase(forgotPassword.pending, (state) => {
                     state.loading = true;
@@ -324,6 +348,35 @@ const AuthSlice = createSlice(
                             ? payload.message
                             : 'Something went wrong. Try again later.';
                 })
+                // .addCase(loginAdmin.pending, (state) => {
+                //     state.loadingLogin = true;
+                //     state.isLoggedIn = false;
+                //     state.error = false;
+                // })
+                // .addCase(loginAdmin.fulfilled, (state, { payload }) => {
+                //     state.isLoggedIn = true;
+                //     state.message = payload?.message;
+                //     state.loadingLogin = false;
+                //     state.currentUser = payload?.user;
+                //     sessionStorage.setItem(
+                //         'boroma_admin_token',
+                //         JSON.stringify({ token: payload?.token })
+                //     );
+                //     if (payload?.user?.roleId) {
+                //         sessionStorage.setItem('user_role_id', payload?.user?.roleId);
+                //     }
+                //     if (payload?.user?.roleName) {
+                //         sessionStorage.setItem('role', payload?.user?.roleName);
+                //     }
+                // })
+                // .addCase(loginAdmin.rejected, (state, response) => {
+                //     state.error = true;
+                //     state.loadingLogin = false;
+                //     state.message =
+                //         response.payload !== undefined && response.payload.message
+                //             ? response.payload.message
+                //             : 'Something went wrong. Try again later.';
+                // })
         }
     }
 )
