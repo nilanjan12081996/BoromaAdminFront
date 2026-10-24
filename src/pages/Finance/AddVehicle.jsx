@@ -9,6 +9,7 @@ import {
   getVehiclesInfo,
 } from "../../Reducer/VehicleSlice";
 import { useSelector } from "react-redux";
+import { validateVehicleNumber } from "../../utils/vehicleValidation";
 
 const AddVehicle = ({ openAddVehicleModal, setOpenAddVehicleModal }) => {
   const { categ } = useSelector((state) => state?.vehicles);
@@ -51,9 +52,11 @@ const AddVehicle = ({ openAddVehicleModal, setOpenAddVehicleModal }) => {
                 </div>
                 <TextInput
                   type="text"
-                  placeholder="Enter Vehicle Number"
+                  placeholder="e.g. WB-01-AB-1234"
+                  className="uppercase"
                   {...register("vehicle_no", {
                     required: "Vehicle Number is Required",
+                    validate: validateVehicleNumber,
                   })}
                 />
                 {errors.vehicle_no && (

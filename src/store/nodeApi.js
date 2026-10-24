@@ -13,7 +13,11 @@ nodeApi.interceptors.request.use((req) => {
   }
   const token = userTokenData && userTokenData.token ? userTokenData.token : null;
 
-  req.headers['Content-Type'] = 'application/json';
+  if (req.data instanceof FormData) {
+    delete req.headers['Content-Type'];
+  } else {
+    req.headers['Content-Type'] = 'application/json';
+  }
   if (token) {
     req.headers['Authorization'] = `Bearer ${token}`;
     req.headers['token'] = token;

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { getCategory } from "../../Reducer/CategorySlice";
 import { addVehicle, getCategoryVeh, getVehiclesInfo } from "../../Reducer/VehicleSlice";
 import { useSelector } from "react-redux";
+import { validateVehicleNumber } from "../../utils/vehicleValidation";
 
 const AddVehicle=({openAddVehicleModal,setOpenAddVehicleModal})=>{
     const{categ}=useSelector((state)=>state?.vehicles)
@@ -50,8 +51,12 @@ const vType=watch('vehicle_type')
                 </div>
                 <TextInput
                 type="text"
-                placeholder="Enter Vehicle Number"
-                {...register("vehicle_no",{required:"Vehicle Number is Required"})}
+                placeholder="e.g. WB-01-AB-1234"
+                className="uppercase"
+                {...register("vehicle_no", {
+                  required: "Vehicle Number is Required",
+                  validate: validateVehicleNumber,
+                })}
                 />
                     {errors.vehicle_no && (
                     <p className="text-red-500 text-sm mt-1">{errors.vehicle_no.message}</p>
