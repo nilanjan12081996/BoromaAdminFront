@@ -40,6 +40,7 @@ import CustomerManagement from '../pages/CustomerManagement/CustomerManagement.j
 import ManageCategory from '../pages/CategoryManagement/ManageCategory.jsx';
 import ManageSubCategory from '../pages/SubcategoryManagment/ManageSubCategory.jsx';
 import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx';
+import Transport from '../pages/Transport/Transport.jsx';
 
 import Finance from '../pages/Finance/Finance.jsx';
 import Booking from '../pages/Booking/Booking.jsx';
@@ -115,6 +116,16 @@ const allRoutes = [
   
 
   {
+    path: '/category',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <ManageCategory />,
+      },
+    ],
+  },
+  {
     path: '/category-management',
     element: <InsideLayout />,
     children: [
@@ -141,6 +152,26 @@ const allRoutes = [
       {
         index: true,
         element: <VehicleManagement/>,
+      },
+    ],
+  },
+  {
+    path: '/transport',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Transport />,
+      },
+    ],
+  },
+  {
+    path: '/transport-management',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Transport />,
       },
     ],
   },

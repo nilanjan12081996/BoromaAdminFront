@@ -47,8 +47,9 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   { id: 2, name: 'Finance', shortName: 'finance' },
   { id: 3, name: 'Booking', shortName: 'booking' },
   { id: 4, name: 'Maintainance', shortName: 'maintainance' },
-  { id: 5, name: 'Transport', shortName: 'transport' },
+  { id: 5, name: 'Transport', shortName: 'transport', url: '/transport' },
   { id: 6, name: 'Diver', shortName: 'diver' },
+  { id: 7, name: 'Category', shortName: 'category', url: '/category' },
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {

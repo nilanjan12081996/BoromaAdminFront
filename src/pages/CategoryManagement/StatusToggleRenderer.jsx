@@ -1,41 +1,47 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { changeStatus, getCategory } from "../../Reducer/CategorySlice";
+import React, { useEffect, useState } from "react";
 
 const StatusToggleRenderer = (props) => {
-  const dispatch = useDispatch();
-  const [status, setStatus] = useState(props?.value); // props.value = true/false
+  const [status, setStatus] = useState(Boolean(props?.value));
 
-  const handleToggle = () => {
+  useEffect(() => {
+    setStatus(Boolean(props?.value));
+  }, [props?.value]);
+
+  const handleToggle = (e) => {
+    e.stopPropagation();
     const newStatus = !status;
     setStatus(newStatus);
 
-    // API payload
-    const payload = {
-      category_id: props?.data?.id, // row id
-      status: newStatus ? 1 : 0,
-    };
-
-    // Call API
-    dispatch(changeStatus(payload)).then((res)=>{
-        if(res?.payload?.status_code===200){
-            dispatch(getCategory())
-        }
-    });
+    // Call parent handler if provided in context/props
+    if (props?.context?.onStatusToggle) {
+      props.context.onStatusToggle(props?.data?.id, newStatus);
+    }
   };
 
   return (
-    <div
-      onClick={handleToggle}
-      className={`w-16 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-        status ? "bg-green-500" : "bg-gray-400"
-      }`}
-    >
+    <div className="flex items-center gap-2 h-full py-1">
       <div
-        className={`bg-white w-6 h-6 rounded-full shadow-md transform duration-300 ${
-          status ? "translate-x-9" : "translate-x-0"
+        onClick={handleToggle}
+        title={status ? "Click to Deactivate" : "Click to Activate"}
+        className={`w-12 h-6 flex items-center rounded-full p-0.5 cursor-pointer transition-colors duration-300 ${
+          status ? "bg-green-500" : "bg-gray-300 hover:bg-gray-400"
         }`}
-      />
+      >
+        <div
+          className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ${
+            status ? "translate-x-6" : "translate-x-0"
+          }`}
+        />
+      </div>
+      <span
+        className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+          status
+            ? "bg-green-50 text-green-700 border border-green-200"
+            : "bg-gray-100 text-gray-500 border border-gray-200"
+        }`}
+      >
+        {status ? "Active" : "Inactive"}
+      </span>
     </div>
   );
 };
