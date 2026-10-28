@@ -41,6 +41,7 @@ import ManageCategory from '../pages/CategoryManagement/ManageCategory.jsx';
 import ManageSubCategory from '../pages/SubcategoryManagment/ManageSubCategory.jsx';
 import VehicleManagement from '../pages/VehicleManagement/VehicleManagement.jsx';
 import Transport from '../pages/Transport/Transport.jsx';
+import Company from '../pages/Company/Company.jsx';
 
 import Finance from '../pages/Finance/Finance.jsx';
 import Booking from '../pages/Booking/Booking.jsx';
@@ -172,6 +173,26 @@ const allRoutes = [
       {
         index: true,
         element: <Transport />,
+      },
+    ],
+  },
+  {
+    path: '/company',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Company />,
+      },
+    ],
+  },
+  {
+    path: '/company-management',
+    element: <InsideLayout />,
+    children: [
+      {
+        index: true,
+        element: <Company />,
       },
     ],
   },

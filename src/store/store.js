@@ -34,6 +34,7 @@ import SubcategorySlice from '../Reducer/SubcategorySlice'
 import VehicleSlice from '../Reducer/VehicleSlice'
 import SidebarSlice from '../Reducer/SidebarSlice'
 import VehicleInfoSlice from '../Reducer/VehicleInfoSlice'
+import CompanySlice from '../Reducer/CompanySlice'
 
 const store = configureStore({
   reducer: {
@@ -72,6 +73,7 @@ const store = configureStore({
     vehicles:VehicleSlice,
     vehicleInfo: VehicleInfoSlice,
     sidebar:SidebarSlice,
+    company: CompanySlice,
   },
   devTools: import.meta.env.DEV,
 });

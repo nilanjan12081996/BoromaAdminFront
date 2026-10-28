@@ -214,17 +214,7 @@ const ManageCategory = () => {
    */
   const columnDefs = useMemo(
     () => [
-      {
-        field: "id",
-        headerName: "ID",
-        sortable: true,
-        filter: true,
-        width: 100,
-        maxWidth: 120,
-        cellRenderer: (params) => (
-          <span className="font-semibold text-gray-700">#{params?.value}</span>
-        ),
-      },
+
       {
         field: "category_name",
         headerName: "CATEGORY NAME",

@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Modal, Spinner } from "flowbite-react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { getAllVehicleInfo } from "../../Reducer/VehicleInfoSlice";
 import nodeApi from "../../store/nodeApi";
-import { MdDelete, MdClose, MdImage } from "react-icons/md";
+import { MdDelete, MdClose, MdImage, MdCloudUpload } from "react-icons/md";
 import { BsZoomIn } from "react-icons/bs";
 
-const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) => {
+const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated, uploadMode = false }) => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [uploadFiles, setUploadFiles] = useState([]);
+  const [uploadPreviews, setUploadPreviews] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
   const baseURL = import.meta.env.VITE_NODE_API_BASE_URL
@@ -58,8 +62,59 @@ const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) =
     } else {
       setImages([]);
       setPreviewImage(null);
+      setUploadFiles([]);
+      setUploadPreviews([]);
     }
   }, [isOpen, vehicle?.id]);
+
+  // Handle file selection for upload
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const combined = [...uploadFiles, ...files].slice(0, 20);
+    setUploadFiles(combined);
+    const previews = combined.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+      file,
+    }));
+    setUploadPreviews(previews);
+  };
+
+  const removeUploadFile = (idx) => {
+    if (uploadPreviews[idx]?.url) URL.revokeObjectURL(uploadPreviews[idx].url);
+    setUploadFiles((prev) => prev.filter((_, i) => i !== idx));
+    setUploadPreviews((prev) => prev.filter((_, i) => i !== idx));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const clearUploadFiles = () => {
+    uploadPreviews.forEach((p) => p.url && URL.revokeObjectURL(p.url));
+    setUploadFiles([]);
+    setUploadPreviews([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // Handle uploading selected files
+  const handleUpload = async () => {
+    if (!vehicle?.id || uploadFiles.length === 0) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("vehicle_id", vehicle.id);
+      uploadFiles.forEach((file) => formData.append("images", file));
+      await nodeApi.post("/vehicle-image/save", formData);
+      toast.success(`${uploadFiles.length} image(s) uploaded successfully!`);
+      clearUploadFiles();
+      fetchImages();
+      if (onImagesUpdated) onImagesUpdated();
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Failed to upload images.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   // Handle deleting an image
   const handleDeleteImage = async (imgId) => {
@@ -117,7 +172,7 @@ const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) =
               <Spinner size="xl" color="failure" />
               <p className="text-sm text-gray-500 font-medium">Loading vehicle images...</p>
             </div>
-          ) : images.length === 0 ? (
+          ) : images.length === 0 && !uploadMode ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 mb-3">
                 <MdImage className="text-3xl" />
@@ -138,8 +193,81 @@ const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) =
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-2">
-              {images.map((img, idx) => (
+            <div className="space-y-4">
+              {/* Upload section - only shown in uploadMode */}
+              {uploadMode && (
+                <div>
+                  <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-green-400 bg-gray-50/50 hover:bg-green-50/20 transition-colors">
+                    <input
+                      ref={fileInputRef}
+                      id="upload_vehicle_images_input"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="upload_vehicle_images_input"
+                      className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-[#16a34a]">
+                        <MdCloudUpload className="text-2xl" />
+                      </div>
+                      <span className="text-xs font-semibold text-gray-700">
+                        Click to select vehicle images to upload
+                      </span>
+                      <span className="text-[11px] text-gray-400">
+                        Supports JPG, PNG, WEBP (Max 20 files)
+                      </span>
+                    </label>
+                  </div>
+
+                  {uploadPreviews.length > 0 && (
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold text-gray-600">
+                          Selected ({uploadPreviews.length})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={clearUploadFiles}
+                          className="text-xs text-red-600 hover:underline"
+                        >
+                          Clear all
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2 max-h-36 overflow-y-auto p-1 bg-gray-50 rounded-lg border border-gray-100">
+                        {uploadPreviews.map((preview, idx) => (
+                          <div
+                            key={idx}
+                            className="relative group rounded-md overflow-hidden border border-gray-200 aspect-square bg-white shadow-xs"
+                          >
+                            <img
+                              src={preview.url}
+                              alt={preview.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeUploadFile(idx)}
+                              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs shadow-md cursor-pointer"
+                              title="Remove"
+                            >
+                              <MdClose className="text-xs" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Existing images grid */}
+              {images.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-2">
+                  {images.map((img, idx) => (
                 <div
                   key={img.id || idx}
                   className="group relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50 shadow-xs hover:shadow-md transition-all duration-200 aspect-square flex items-center justify-center"
@@ -179,6 +307,8 @@ const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) =
                   </div>
                 </div>
               ))}
+                </div>
+              )}
             </div>
           )}
         </Modal.Body>
@@ -187,14 +317,26 @@ const ViewVehicleImagesModal = ({ isOpen, onClose, vehicle, onImagesUpdated }) =
           <span className="text-xs font-medium text-gray-500">
             Total Images: <strong className="text-gray-800">{images.length}</strong>
           </span>
-          <Button
-            color="gray"
-            type="button"
-            onClick={onClose}
-            className="border border-gray-300 font-medium"
-          >
-            Close
-          </Button>
+          <div className="flex items-center gap-2">
+            {uploadMode && uploadFiles.length > 0 && (
+              <Button
+                type="button"
+                onClick={handleUpload}
+                disabled={uploading}
+                className="bg-[#16a34a] hover:bg-[#15803d] text-white font-medium text-xs"
+              >
+                {uploading ? "Uploading..." : `Upload ${uploadFiles.length} Image(s)`}
+              </Button>
+            )}
+            <Button
+              color="gray"
+              type="button"
+              onClick={onClose}
+              className="border border-gray-300 font-medium"
+            >
+              Close
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
 

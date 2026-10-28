@@ -21,6 +21,7 @@ import {
   MdAdminPanelSettings,
   MdPayment,
 } from 'react-icons/md';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import userRoles from '../../pages/utils/userRoles';
 
 interface SidebarProps {
@@ -50,6 +51,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   { id: 5, name: 'Transport', shortName: 'transport', url: '/transport' },
   { id: 6, name: 'Diver', shortName: 'diver' },
   { id: 7, name: 'Category', shortName: 'category', url: '/category' },
+  { id: 8, name: 'Company', shortName: 'company', url: '/company' },
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
@@ -175,6 +177,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     }
     if (key.includes('role')) {
       return <MdAdminPanelSettings className='text-xl shrink-0' />;
+    }
+    if (key.includes('comp') || key.includes('corp') || key.includes('business')) {
+      return <HiOutlineOfficeBuilding className='text-xl shrink-0' />;
     }
 
     return <BiUserCircle className='text-xl shrink-0' />;

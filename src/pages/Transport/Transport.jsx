@@ -9,6 +9,7 @@ import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { CgAdd } from "react-icons/cg";
 import { BsEye } from "react-icons/bs";
+import { MdCloudUpload } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -41,6 +42,8 @@ const Transport = () => {
   // Selected item for edit/delete/images
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [viewImagesVehicle, setViewImagesVehicle] = useState(null);
+  const [uploadImagesVehicle, setUploadImagesVehicle] = useState(null);
+  const [openUploadImagesModal, setOpenUploadImagesModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const hasFetchedRef = useRef(false);
@@ -124,6 +127,12 @@ const Transport = () => {
   const handleOpenDelete = useCallback((vehicle) => {
     setSelectedVehicle(vehicle);
     setOpenDeleteModal(true);
+  }, []);
+
+  // Handler for opening upload images modal from Actions
+  const handleOpenUploadImages = useCallback((vehicle) => {
+    setUploadImagesVehicle(vehicle);
+    setOpenUploadImagesModal(true);
   }, []);
 
   // Handler for confirming delete
@@ -216,17 +225,7 @@ const Transport = () => {
    */
   const columnDefs = useMemo(
     () => [
-      {
-        field: "id",
-        headerName: "ID",
-        sortable: true,
-        filter: true,
-        width: 90,
-        maxWidth: 110,
-        cellRenderer: (params) => (
-          <span className="font-semibold text-gray-700">#{params?.value}</span>
-        ),
-      },
+
       {
         field: "category_name",
         headerName: "CATEGORY NAME",
@@ -293,6 +292,13 @@ const Transport = () => {
         cellRenderer: (params) => {
           const item = params?.data?.raw || params?.data;
           const count = Array.isArray(item?.images) ? item.images.length : 0;
+          if (count === 0) {
+            return (
+              <div className="flex items-center h-full py-1">
+                <span className="text-xs font-semibold text-gray-400 px-2">NA</span>
+              </div>
+            );
+          }
           return (
             <div className="flex items-center h-full py-1">
               <button
@@ -305,7 +311,7 @@ const Transport = () => {
                 className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md border border-[#536EFF] text-[#536EFF] bg-white hover:bg-[#536EFF] hover:text-white transition-colors duration-150 cursor-pointer shadow-xs"
               >
                 <BsEye className="text-sm" />
-                View {count > 0 ? `(${count})` : ""}
+                View ({count})
               </button>
             </div>
           );
@@ -322,13 +328,22 @@ const Transport = () => {
       {
         headerName: "ACTIONS",
         field: "actions",
-        minWidth: 200,
+        minWidth: 300,
         sortable: false,
         filter: false,
         cellRenderer: (params) => {
           const item = params?.data?.raw || params?.data;
           return (
             <div className="flex items-center gap-2 h-full py-1">
+              <button
+                type="button"
+                onClick={() => handleOpenUploadImages(item)}
+                title="Upload Images"
+                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md border border-[#16a34a] text-[#16a34a] bg-white hover:bg-[#16a34a] hover:text-white transition-colors duration-150 cursor-pointer shadow-xs"
+              >
+                <MdCloudUpload className="text-base" />
+                Upload Image
+              </button>
               <button
                 type="button"
                 onClick={() => handleOpenEdit(item)}
@@ -352,7 +367,7 @@ const Transport = () => {
         },
       },
     ],
-    [handleOpenEdit, handleOpenDelete]
+    [handleOpenEdit, handleOpenDelete, handleOpenUploadImages]
   );
 
   return (
@@ -450,6 +465,45 @@ const Transport = () => {
           }}
           vehicle={viewImagesVehicle}
           onImagesUpdated={() => dispatch(getAllVehicleInfo())}
+          uploadMode={false}
+        />
+      )}
+
+      {/* 5. Upload Vehicle Images Modal (from Actions) */}
+      {openUploadImagesModal && (
+        <ViewVehicleImagesModal
+          isOpen={openUploadImagesModal}
+          onClose={() => {
+            setOpenUploadImagesModal(false);
+            setUploadImagesVehicle(null);
+            dispatch(getAllVehicleInfo());
+          }}
+          vehicle={uploadImagesVehicle}
+          onImagesUpdated={() => {
+            dispatch(getAllVehicleInfo());
+            // refresh local images count
+            dispatch(getAllVehicleInfo()).then((res) => {
+              const apiData =
+                res?.payload?.data ||
+                res?.payload?.res ||
+                res?.payload?.vehicles ||
+                res?.payload?.result ||
+                (Array.isArray(res?.payload) ? res.payload : null);
+              if (Array.isArray(apiData)) {
+                const updated = apiData.find((v) => v.id === uploadImagesVehicle?.id);
+                if (updated && Array.isArray(updated.images)) {
+                  setVehicles((prev) =>
+                    prev.map((v) =>
+                      v.id === uploadImagesVehicle.id
+                        ? { ...v, images: updated.images, raw: { ...v.raw, images: updated.images } }
+                        : v
+                    )
+                  );
+                }
+              }
+            });
+          }}
+          uploadMode={true}
         />
       )}
     </div>

@@ -1,20 +1,15 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Label, Modal, Select, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createVehicleInfo, getAllVehicleInfo } from "../../Reducer/VehicleInfoSlice";
 import { getCategory } from "../../Reducer/CategorySlice";
-import nodeApi from "../../store/nodeApi";
 import { toast } from "react-toastify";
 import { CgAdd } from "react-icons/cg";
-import { MdCloudUpload, MdClose } from "react-icons/md";
 import { validateVehicleNumber } from "../../utils/vehicleValidation";
 
 const AddVehicleModal = ({ isOpen, onClose, onVehicleAdded }) => {
   const [submitting, setSubmitting] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [filePreviews, setFilePreviews] = useState([]);
-  const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
   const { categoryList } = useSelector((state) => state?.category || {});
@@ -50,40 +45,6 @@ const AddVehicleModal = ({ isOpen, onClose, onVehicleAdded }) => {
     },
   });
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-
-    const combined = [...selectedFiles, ...files].slice(0, 20);
-    setSelectedFiles(combined);
-
-    const previews = combined.map((file) => ({
-      name: file.name,
-      size: (file.size / 1024).toFixed(1) + " KB",
-      url: URL.createObjectURL(file),
-      file,
-    }));
-    setFilePreviews(previews);
-  };
-
-  const removeFile = (indexToRemove) => {
-    if (filePreviews[indexToRemove]?.url) {
-      URL.revokeObjectURL(filePreviews[indexToRemove].url);
-    }
-    const updatedFiles = selectedFiles.filter((_, idx) => idx !== indexToRemove);
-    const updatedPreviews = filePreviews.filter((_, idx) => idx !== indexToRemove);
-    setSelectedFiles(updatedFiles);
-    setFilePreviews(updatedPreviews);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  const cleanupPreviews = () => {
-    filePreviews.forEach((p) => p.url && URL.revokeObjectURL(p.url));
-    setSelectedFiles([]);
-    setFilePreviews([]);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
   const onSubmit = async (data) => {
     setSubmitting(true);
     const selectedCategory = categories.find(
@@ -111,24 +72,8 @@ const AddVehicleModal = ({ isOpen, onClose, onVehicleAdded }) => {
           res?.payload?.id ||
           res?.payload?.result?.id;
 
-        // If user uploaded any images, send to /vehicle-image/save
-        if (newVehicleId && selectedFiles.length > 0) {
-          try {
-            const formData = new FormData();
-            formData.append("vehicle_id", newVehicleId);
-            selectedFiles.forEach((file) => {
-              formData.append("images", file);
-            });
-            await nodeApi.post("/vehicle-image/save", formData);
-          } catch (imgErr) {
-            console.error("Failed to upload vehicle images:", imgErr);
-            toast.warn("Vehicle created, but some images could not be uploaded.");
-          }
-        }
-
         toast.success("Vehicle added successfully!");
         if (onVehicleAdded) onVehicleAdded({ ...payload, id: newVehicleId });
-        cleanupPreviews();
         reset();
         onClose();
         dispatch(getAllVehicleInfo());
@@ -148,7 +93,6 @@ const AddVehicleModal = ({ isOpen, onClose, onVehicleAdded }) => {
   };
 
   const handleClose = () => {
-    cleanupPreviews();
     reset();
     onClose();
   };
@@ -265,89 +209,6 @@ const AddVehicleModal = ({ isOpen, onClose, onVehicleAdded }) => {
                 <option value="1">Active</option>
                 <option value="0">Inactive</option>
               </Select>
-            </div>
-
-            {/* 5. Vehicle Images (Optional) */}
-            <div>
-              <div className="mb-2 flex items-center justify-between">
-                <Label
-                  htmlFor="vehicle_images_input"
-                  value="Vehicle Images"
-                  className="font-medium text-gray-700"
-                />
-                <span className="text-xs font-medium text-gray-400">
-                  Optional (Multiple allowed, up to 20)
-                </span>
-              </div>
-
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-red-400 bg-gray-50/50 hover:bg-red-50/20 transition-colors">
-                <input
-                  ref={fileInputRef}
-                  id="vehicle_images_input"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="vehicle_images_input"
-                  className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
-                >
-                  <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-[#bf0300]">
-                    <MdCloudUpload className="text-2xl" />
-                  </div>
-                  <span className="text-xs font-semibold text-gray-700">
-                    Click to browse or select multiple vehicle images
-                  </span>
-                  <span className="text-[11px] text-gray-400">
-                    Supports JPG, PNG, WEBP (Max 20 files)
-                  </span>
-                </label>
-              </div>
-
-              {/* Previews */}
-              {filePreviews.length > 0 && (
-                <div className="mt-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-gray-600">
-                      Selected Images ({filePreviews.length})
-                    </span>
-                    <button
-                      type="button"
-                      onClick={cleanupPreviews}
-                      className="text-xs text-red-600 hover:underline"
-                    >
-                      Clear all
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-4 gap-2.5 max-h-44 overflow-y-auto p-1 bg-gray-50 rounded-lg border border-gray-100">
-                    {filePreviews.map((preview, idx) => (
-                      <div
-                        key={idx}
-                        className="relative group rounded-md overflow-hidden border border-gray-200 aspect-square bg-white shadow-2xs"
-                      >
-                        <img
-                          src={preview.url}
-                          alt={preview.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeFile(idx)}
-                          className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs shadow-md cursor-pointer transition-transform hover:scale-110"
-                          title="Remove image"
-                        >
-                          <MdClose className="text-xs" />
-                        </button>
-                        <span className="absolute bottom-0 inset-x-0 bg-black/70 text-white text-[9px] px-1 py-0.5 truncate text-center">
-                          {preview.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </Modal.Body>
